@@ -12,7 +12,7 @@ class Posts extends Component {
 	// 		posts: [],
 	// 	};
 	// }
-	componentWillMount() {
+	componentDidMount() {
 		// console.log(123);
 		// This fetch is moved to the postActions file for use in Redux.
 		// fetch('https://jsonplaceholder.typicode.com/users/1/posts')
@@ -21,7 +21,13 @@ class Posts extends Component {
 		//     .then(data => this.setState({posts: data}));
 		// Now when the component mounts it will automatically fetch posts via the prop fetchPosts() imported above.
 		this.props.fetchPosts();
-    }
+	}
+	
+	componentWillReceiveProps(nextProps) {
+		if(nextProps.newPost) {
+			this.props.posts.unshift(nextProps.newPost);
+		}
+	}
     
 	render() {
         // const postItems = this.state.posts.map(post => (
@@ -42,11 +48,13 @@ class Posts extends Component {
 
 Posts.propTypes = {
 	fetchPosts: PropTypes.func.isRequired,
-	posts: PropTypes.array.isRequired
+	posts: PropTypes.array.isRequired,
+	newPost: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => ({
-	posts: state.posts.items
+	posts: state.posts.items,
+	newPost: state.posts.item
 })
 
 // export default Posts;
